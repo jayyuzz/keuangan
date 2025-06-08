@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Manajemen Keuangan</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .list-group-item {
+            background-color: #ffffff;
+            border: 1px solid #e9ecef;
+        }
+        .financial-summary {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-12 text-center mb-4">
+                <h1 class="display-5 fw-bold text-primary">Aplikasi Manajemen Keuangan</h1>
+            </div>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="row">
+                    <div class="col-12">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="h4 mb-0">Tambah Pemasukan</h2>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ url_for('tambah_pemasukan') }}" method="post">
+                            <div class="mb-3">
+                                <label for="keterangan" class="form-label">Keterangan</label>
+                                <input type="text" class="form-control" id="keterangan" name="keterangan" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="jumlah" class="form-label">Jumlah</label>
+                                <input type="number" class="form-control" id="jumlah" name="jumlah" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="tanggal" class="form-label">Tanggal</label>
+                                <input type="date" class="form-control" id="tanggal" name="tanggal" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Tambah Pemasukan</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="h4 mb-0">Tambah Pengeluaran</h2>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ url_for('tambah_pengeluaran') }}" method="post">
+                            <div class="mb-3">
+                                <label for="kategori" class="form-label">Kategori</label>
+                                <input type="text" class="form-control" id="kategori" name="kategori" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="jumlah" class="form-label">Jumlah</label>
+                                <input type="number" class="form-control" id="jumlah" name="jumlah" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="tanggal" class="form-label">Tanggal</label>
+                                <input type="date" class="form-control" id="tanggal" name="tanggal" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Tambah Pengeluaran</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="h4 mb-0">Daftar Pemasukan</h2>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        {% for item in pemasukan %}
+                            <li class="list-group-item">
+                                <div class="d-flex justify-content-between">
+                                    <span>{{ item.keterangan }}</span>
+                                    <span class="text-success">Rp{{ "{:,.0f}".format(item.jumlah) }}</span>
+                                </div>
+                                <small class="text-muted">{{ item.tanggal }}</small>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="h4 mb-0">Daftar Pengeluaran</h2>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        {% for item in pengeluaran %}
+                            <li class="list-group-item">
+                                <div class="d-flex justify-content-between">
+                                    <span>{{ item.kategori }}</span>
+                                    <span class="text-danger">Rp{{ "{:,.0f}".format(item.jumlah) }}</span>
+                                </div>
+                                <small class="text-muted">{{ item.tanggal }}</small>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="financial-summary">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="text-center">
+                                <h3 class="h5">Total Pemasukan</h3>
+                                <p class="h4 text-success">Rp{{ "{:,.0f}".format(total_pemasukan) }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center">
+                                <h3 class="h5">Total Pengeluaran</h3>
+                                <p class="h4 text-danger">Rp{{ "{:,.0f}".format(total_pengeluaran) }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center">
+                                <h3 class="h5">Saldo Hari Ini</h3>
+                                <p class="h4 text-primary">Rp{{ "{:,.0f}".format(saldo) }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="h4 mb-0">Export Laporan Berdasarkan Range Tanggal</h2>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ url_for('export_pdf') }}" method="post">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <label for="start_date" class="form-label">Tanggal Mulai</label>
+                                    <input type="date" class="form-control" id="start_date" name="start_date" required>
+                                </div>
+                                <div class="col-md-5">
+                                    <label for="end_date" class="form-label">Tanggal Akhir</label>
+                                    <input type="date" class="form-control" id="end_date" name="end_date" required>
+                                </div>
+                                <div class="col-md-2 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-success w-100">Export PDF</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

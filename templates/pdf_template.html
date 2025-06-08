@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Keuangan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1, h2, h3 {
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        .text-success {
+            color: green;
+        }
+        .text-danger {
+            color: red;
+        }
+        .summary {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Laporan Keuangan</h1>
+    <h3>Periode: {{ start_date }} - {{ end_date }}</h3>
+
+    <h2>Pemasukan</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Keterangan</th>
+                <th>Jumlah</th>
+                <th>Tanggal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in pemasukan %}
+                <tr>
+                    <td>{{ item.keterangan }}</td>
+                    <td class="text-success">Rp{{ "{:,.0f}".format(item.jumlah) }}</td>
+                    <td>{{ item.tanggal }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Pengeluaran</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Kategori</th>
+                <th>Jumlah</th>
+                <th>Tanggal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in pengeluaran %}
+                <tr>
+                    <td>{{ item.kategori }}</td>
+                    <td class="text-danger">Rp{{ "{:,.0f}".format(item.jumlah) }}</td>
+                    <td>{{ item.tanggal }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="summary">
+        <p><strong>Total Pemasukan:</strong> Rp{{ "{:,.0f}".format(total_pemasukan) }}</p>
+        <p><strong>Total Pengeluaran:</strong> Rp{{ "{:,.0f}".format(total_pengeluaran) }}</p>
+        <p><strong>Saldo Akhir:</strong> Rp{{ "{:,.0f}".format(saldo_akhir) }}</p>
+    </div>
+</body>
+</html>
